@@ -3,6 +3,7 @@
 export(collapseTreeview)
 export(expandTreeview)
 export(make_tree)
+export(revealTreeviewSelected)
 export(searchTreeview)
 export(treecheckInput)
 export(treeviewInput)

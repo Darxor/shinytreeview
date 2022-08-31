@@ -10,7 +10,9 @@ searchTreeview(
   ignore_case = TRUE,
   exact_match = FALSE,
   reveal_results = TRUE,
+  hide_unrelated = TRUE,
   collapse_before = TRUE,
+  scroll_to_match = TRUE,
   session = shiny::getDefaultReactiveDomain()
 )
 }
@@ -25,7 +27,11 @@ searchTreeview(
 
 \item{reveal_results}{Reveal matching nodes.}
 
+\item{hide_unrelated}{Hides non-matching nodes.}
+
 \item{collapse_before}{Collapse all nodes before revealing results.}
+
+\item{scroll_to_match}{Scroll window to first pattern match.}
 
 \item{session}{The session object passed to function given to shinyServer.}
 }

@@ -83,6 +83,9 @@ collapseTreeview <- function(inputId,
 #'
 #' @param inputId The id of the input object.
 #' @param session The session object passed to function given to shinyServer.
+#'
+#' @return None.
+#' @export
 revealTreeviewSelected <- function(inputId,
                                    session = shiny::getDefaultReactiveDomain()) {
   message <- list(revealSelected = list(bind = TRUE))
