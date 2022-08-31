@@ -108,6 +108,22 @@ $.extend(treeviewInputBinding, {
                 tree.collapseAll();
             }
         }
+        if (data.hasOwnProperty("revealSelected")) {
+            var revealSel = function() {
+                var selectedNode = tree.getSelected();
+                if (selectedNode !== undefined) {
+                    tree.revealNode(selectedNode);
+                    selectedNode[0].$el.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            if(data.revealSelected.bind) {
+                $(el).on("rendered", function(event, data) {
+                    revealSel();
+                });
+            } else {
+                revealSel();
+            }
+        }
     },
     getState: function (el) { },
     initialize: function (el) {
