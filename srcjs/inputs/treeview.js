@@ -3,6 +3,19 @@ import "shiny";
 import "patternfly-bootstrap-treeview/dist/bootstrap-treeview.min.js";
 import "patternfly-bootstrap-treeview/dist/bootstrap-treeview.min.css";
 
+function collectUnrelated(nodes) {
+    var unrelated = [];
+    $.each(nodes, function (i, n) {
+        if (!n.searchResult && !n.state.expanded) { // no hit, no parent
+            unrelated.push(n);
+        }
+        if (!n.searchResult && n.nodes) { // recurse for non-result children
+            $.merge(unrelated, collectUnrelated(n.nodes));
+        }
+    });
+    return unrelated;
+}
+
 var treeviewInputBinding = new Shiny.InputBinding();
 $.extend(treeviewInputBinding, {
     find: function (scope) {
@@ -46,15 +59,31 @@ $.extend(treeviewInputBinding, {
     receiveMessage: function (el, data) {
         var tree = $(el).data("treeview");
         if (data.hasOwnProperty("search")) {
-            if (data.search.collapse) {
+            if (data.search.collapse || data.search.hideunrelated) {
                 tree.collapseAll();
             }
+            tree.enableAll();
+
             if (data.search.pattern.length > 1) {
                 data.search.pattern.map(function (pattern) {
                     tree.search(pattern, data.search.options);
                 });
             } else {
                 tree.search(data.search.pattern, data.search.options);
+            }
+
+            if (data.search.hideunrelated) {
+                roots = tree.findNodes("^1$", "level");
+                //collect all nodes to disable, then call disable once.
+                var unrelated = collectUnrelated(roots);
+                tree.disableNode(unrelated, { silent: true });
+            }
+
+            if (data.search.scrolltoview) {
+                nodeResults = $(el).find('.node-result');
+                if (nodeResults.length) {
+                    nodeResults.get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
         }
         if (data.hasOwnProperty("expand")) {
