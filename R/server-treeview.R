@@ -6,7 +6,9 @@
 #' @param ignore_case Case insensitive.
 #' @param exact_match Like or equals.
 #' @param reveal_results Reveal matching nodes.
+#' @param hide_unrelated Hides non-matching nodes.
 #' @param collapse_before Collapse all nodes before revealing results.
+#' @param scroll_to_match Scroll window to first pattern match.
 #' @param session The session object passed to function given to shinyServer.
 #'
 #' @return None.
@@ -18,11 +20,15 @@ searchTreeview <- function(inputId,
                            ignore_case = TRUE,
                            exact_match = FALSE,
                            reveal_results = TRUE,
+                           hide_unrelated = TRUE,
                            collapse_before = TRUE,
+                           scroll_to_match = TRUE,
                            session = shiny::getDefaultReactiveDomain()) {
   message <- list(search = list(
     pattern = list1(pattern),
     collapse = collapse_before,
+    hideunrelated = hide_unrelated,
+    scrolltoview = scroll_to_match,
     options = list(
       ignoreCase = ignore_case,
       exactMatch = exact_match,
@@ -73,6 +79,15 @@ collapseTreeview <- function(inputId,
   session$sendInputMessage(inputId, message)
 }
 
+#' Reveals selected node in \code{treeviewInput}
+#'
+#' @param inputId The id of the input object.
+#' @param session The session object passed to function given to shinyServer.
+revealTreeviewSelected <- function(inputId,
+                                   session = shiny::getDefaultReactiveDomain()) {
+  message <- list(revealSelected = list(bind = TRUE))
+  session$sendInputMessage(inputId, message)
+}
 
 
 
